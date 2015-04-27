@@ -51,10 +51,10 @@ public:
 		if (objects.Count()!=QUADTREE_MAX_ITEMS)
 		{
 			objects.PushBack(col);
-			
 		}
 		else
 		{
+		
 
 			SDL_Rect rect1;
 			rect1.x = rect.x;
@@ -88,37 +88,65 @@ public:
 			childs[1] = new p2QuadTreeNode(rect2);
 			childs[2] = new p2QuadTreeNode(rect3);
 			childs[3] = new p2QuadTreeNode(rect4);
+			parent = this;
 
 
 
-
-
+			if (Intersects(childs[0]->rect, col->rect) && Intersects(childs[1]->rect, col->rect) 
+				&& Intersects(childs[2]->rect, col->rect) && Intersects(childs[3]->rect, col->rect))
+			{
+				objects.PushBack(col);
+			}
 			
 
 			if (Intersects(childs[0]->rect, col->rect))
 			{
-				childs[0]->Insert(col);
-			
+				if (objects.Count() != 0)
+				{
+					childs[0]->Insert(col);
+				}
+				else
+				{
+					childs[0]->objects.PushBack(col);
+				}
 			}
 			if (Intersects(childs[1]->rect, col->rect))
 			{
-				childs[1]->Insert(col);
-
+				if (objects.Count() != 0)
+				{
+					childs[1]->Insert(col);
+				}
+				else
+				{
+					childs[1]->objects.PushBack(col);
+				}
 			}
 			if (Intersects(childs[2]->rect, col->rect))
 			{
-				childs[2]->Insert(col);
-
+				if (objects.Count() != 0)
+				{
+					childs[2]->Insert(col);
+				}
+				else
+				{
+					childs[2]->objects.PushBack(col);
+				}
 			}
 			if (Intersects(childs[3]->rect, col->rect))
 			{
-				childs[3]->Insert(col);
-
+				if (objects.Count() != 0)
+				{
+					childs[3]->Insert(col);
+				}
+				else
+				{
+					childs[3]->objects.PushBack(col);
+				}
 			}
 
 		
 		}
-		// En principi cada node por enmagatzemar QUADTREE_MAX_ITEMS nodes (encara que podrien ser més)
+		// En principi cada node pot enmagatzemar QUADTREE_MAX_ITEMS nodes (encara que podrien ser més)
 
 		// Si es detecten més, el node s'ha de tallar en quatre
 
