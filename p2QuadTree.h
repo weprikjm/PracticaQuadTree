@@ -46,15 +46,15 @@ public:
 	{
 
 	
+
 		// TODO: Insertar un nou Collider al quadtree
-		if (objects.Count()<QUADTREE_MAX_ITEMS)
+		if (objects.Count()!=QUADTREE_MAX_ITEMS)
 		{
 			objects.PushBack(col);
 		}
 		else
 		{
-			
-			objects.PushBack(col);
+		
 
 			SDL_Rect rect1;
 			rect1.x = rect.x;
@@ -64,14 +64,14 @@ public:
 
 			SDL_Rect rect2;
 			rect2.x = rect.x + rect.w/2;
-			rect2.y = rect.y;
+			rect2.y = rect.y + rect.h/2;
 			rect2.h = rect.h / 2;
 			rect2.w = rect.w / 2;
 
 
 			SDL_Rect rect3;
 			rect3.x = rect.x;
-			rect3.y = rect.y + rect.h/2;
+			rect3.y = rect.y + rect.h;
 			rect3.h = rect.h / 2;
 			rect3.w = rect.w / 2;
 
@@ -88,94 +88,63 @@ public:
 			childs[1] = new p2QuadTreeNode(rect2);
 			childs[2] = new p2QuadTreeNode(rect3);
 			childs[3] = new p2QuadTreeNode(rect4);
-			
+			parent = this;
+
+
+
+			if (Intersects(childs[0]->rect, col->rect) && Intersects(childs[1]->rect, col->rect) 
+				&& Intersects(childs[2]->rect, col->rect) && Intersects(childs[3]->rect, col->rect))
+			{
+				objects.PushBack(col);
+			}
 			
 
+			if (Intersects(childs[0]->rect, col->rect))
+			{
+				if (objects.Count() != 0)
+				{
+					childs[0]->Insert(col);
+				}
+				else
+				{
+					childs[0]->objects.PushBack(col);
+				}
+			}
+			if (Intersects(childs[1]->rect, col->rect))
+			{
+				if (objects.Count() != 0)
+				{
+					childs[1]->Insert(col);
+				}
+				else
+				{
+					childs[1]->objects.PushBack(col);
+				}
+			}
+			if (Intersects(childs[2]->rect, col->rect))
+			{
+				if (objects.Count() != 0)
+				{
+					childs[2]->Insert(col);
+				}
+				else
+				{
+					childs[2]->objects.PushBack(col);
+				}
+			}
+			if (Intersects(childs[3]->rect, col->rect))
+			{
+				if (objects.Count() != 0)
+				{
+					childs[3]->Insert(col);
+				}
+				else
+				{
+					childs[3]->objects.PushBack(col);
+				}
+			}
 
 		
-			//We 
-
-			/*
-			
-				if (Intersects(childs[0]->rect, col->rect) && Intersects(childs[1]->rect, col->rect) 
-					&& Intersects(childs[2]->rect, col->rect) && Intersects(childs[3]->rect, col->rect))
-				{
-					objects.PushBack(col);
-				}
-			
-			
-				if (Intersects(childs[0]->rect, col->rect))
-				{
-					if (objects.Count() != QUADTREE_MAX_ITEMS)
-					{
-						childs[0]->Insert(col);
-					}
-					else
-					{
-						childs[0]->objects.PushBack(col);
-					}
-				}
-				if (Intersects(childs[1]->rect, col->rect))
-				{
-					if (objects.Count() != QUADTREE_MAX_ITEMS)
-					{
-						childs[1]->Insert(col);
-					}
-					else
-					{
-						childs[1]->objects.PushBack(col);
-					}
-				}
-				if (Intersects(childs[2]->rect, col->rect))
-				{
-					if (objects.Count() != QUADTREE_MAX_ITEMS)
-					{
-						childs[2]->Insert(col);
-					}
-					else
-					{
-						childs[2]->objects.PushBack(col);
-					}
-				}
-				if (Intersects(childs[3]->rect, col->rect))
-				{
-					if (objects.Count() != QUADTREE_MAX_ITEMS)
-					{
-						childs[3]->Insert(col);
-					}
-					else
-					{
-						childs[3]->objects.PushBack(col);
-					}
-				}
-				
-				*/
-
-			
-			
-					for (int i = 0; i < 4; i++)
-					{
-
-						childs[i]->parent = this;
-
-					
-
-						for (int j = 0; j < objects.Count(); j++)
-						{
-							int count = 0;
-
-					
-
-							if (Intersects(childs[i]->rect, objects[j]->rect))
-							{
-								childs[i]->Insert(objects[j]);
-							}
-
-
-						}
-
-					}
-			
 		}
 		// En principi cada node pot enmagatzemar QUADTREE_MAX_ITEMS nodes (encara que podrien ser més)
 
