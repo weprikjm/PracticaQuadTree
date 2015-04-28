@@ -8,7 +8,7 @@
 #include "Collider.h"
 #include "p2DynArray.h"
 #include "Globals.h"
-#define QUADTREE_MAX_ITEMS 2
+#define QUADTREE_MAX_ITEMS 1
 
 // Helper function to check if one rectangle complately contains another
 bool Contains(const SDL_Rect& a, const SDL_Rect& b);
@@ -91,66 +91,6 @@ public:
 			
 			
 
-
-		
-			//We 
-
-			/*
-			
-				if (Intersects(childs[0]->rect, col->rect) && Intersects(childs[1]->rect, col->rect) 
-					&& Intersects(childs[2]->rect, col->rect) && Intersects(childs[3]->rect, col->rect))
-				{
-					objects.PushBack(col);
-				}
-			
-			
-				if (Intersects(childs[0]->rect, col->rect))
-				{
-					if (objects.Count() != QUADTREE_MAX_ITEMS)
-					{
-						childs[0]->Insert(col);
-					}
-					else
-					{
-						childs[0]->objects.PushBack(col);
-					}
-				}
-				if (Intersects(childs[1]->rect, col->rect))
-				{
-					if (objects.Count() != QUADTREE_MAX_ITEMS)
-					{
-						childs[1]->Insert(col);
-					}
-					else
-					{
-						childs[1]->objects.PushBack(col);
-					}
-				}
-				if (Intersects(childs[2]->rect, col->rect))
-				{
-					if (objects.Count() != QUADTREE_MAX_ITEMS)
-					{
-						childs[2]->Insert(col);
-					}
-					else
-					{
-						childs[2]->objects.PushBack(col);
-					}
-				}
-				if (Intersects(childs[3]->rect, col->rect))
-				{
-					if (objects.Count() != QUADTREE_MAX_ITEMS)
-					{
-						childs[3]->Insert(col);
-					}
-					else
-					{
-						childs[3]->objects.PushBack(col);
-					}
-				}
-				
-				*/
-
 			
 			
 					for (int i = 0; i < 4; i++)
@@ -158,20 +98,16 @@ public:
 
 						childs[i]->parent = this;
 
-					
-
 						for (int j = 0; j < objects.Count(); j++)
 						{
-							int count = 0;
-
-					
-
-							if (Intersects(childs[i]->rect, objects[j]->rect))
+							SDL_Rect rect = objects[j]->rect;
+							SDL_Rect rect2 = childs[i]->rect;
+							int num = objects.Count();
+							if (j < objects.Count() && Intersects(childs[i]->rect, objects[j]->rect))
 							{
-								childs[i]->Insert(objects[j]);
+									childs[i]->Insert(objects[j]);
 							}
-
-
+							
 						}
 
 					}
@@ -186,14 +122,42 @@ public:
 		// Nota: si un Collider intersecciona als quatre childs, deixar-lo al pare
 	}
 
-	int CollectCandidates(p2DynArray<Collider*>& nodes, const SDL_Rect& r) const
+	int CollectCandidates(p2DynArray<Collider*>& nodes, const SDL_Rect& r) 
 	{
+		int possibleCollisions = 0;
+		/*
 		// TODO:
 		// Omplir el array "nodes" amb tots els colliders candidats
 		// de fer intersecció amb el rectangle r
 		// retornar el número de intersección calculades en el procés
 		// Nota: és una funció recursiva
-		return 0;
+		
+
+		p2QuadTreeNode* tmp;
+		tmp = this;
+
+		for (int i = 0; i < 4; i++)
+		{
+			if (tmp->childs[0] != NULL && Contains(childs[i]->rect, r) && tmp != NULL)
+			{
+				tmp = childs[i];
+				tmp->CollectCandidates(nodes, r);
+			}
+			
+			
+		}
+		int x = 0;
+
+		while (x < objects.Count())
+		{
+			nodes.PushBack(tmp->objects[x]);
+			x++;
+		}
+
+		possibleCollisions = x;
+		*/
+		return possibleCollisions;
+		
 	}
 
 	void CollectRects(p2DynArray<p2QuadTreeNode*>& nodes) 
