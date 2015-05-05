@@ -44,94 +44,88 @@ public:
 	 
 	void Insert(Collider* col)
 	{
-
+	
 	
 		// TODO: Insertar un nou Collider al quadtree
-		if (objects.Count()<QUADTREE_MAX_ITEMS)
+		if (objects.Count()<QUADTREE_MAX_ITEMS && childs[0] == NULL)
 		{
-			objects.PushBack(col);
+				objects.PushBack(col);
 		}
 		else
 		{
-			
-			objects.PushBack(col);
 
-			SDL_Rect rect1;
-			rect1.x = rect.x;
-			rect1.y = rect.y;
-			rect1.h = rect.h/2;
-			rect1.w = rect.w/2;
+			if (Intersects(childs[0]->rect, col->rect) && Intersects(childs[1]->rect, col->rect) && Intersects(childs[2]->rect, col->rect) && Intersects(childs[3]->rect, col->rect))
+				parent->objects.PushBack(col);
+			else
+			{
 
-			SDL_Rect rect2;
-			rect2.x = rect.x + rect.w/2;
-			rect2.y = rect.y;
-			rect2.h = rect.h / 2;
-			rect2.w = rect.w / 2;
+				if (childs[0] == NULL)
+				{
+					SDL_Rect rect1;
+					rect1.x = rect.x;
+					rect1.y = rect.y;
+					rect1.h = rect.h / 2;
+					rect1.w = rect.w / 2;
 
-
-			SDL_Rect rect3;
-			rect3.x = rect.x;
-			rect3.y = rect.y + rect.h/2;
-			rect3.h = rect.h / 2;
-			rect3.w = rect.w / 2;
+					SDL_Rect rect2;
+					rect2.x = rect.x + rect.w / 2;
+					rect2.y = rect.y;
+					rect2.h = rect.h / 2;
+					rect2.w = rect.w / 2;
 
 
-			SDL_Rect rect4;
-			rect4.x = rect.x + rect.w/2;
-			rect4.y = rect.y + rect.h/2;
-			rect4.h = rect.h / 2;
-			rect4.w = rect.w / 2;
+					SDL_Rect rect3;
+					rect3.x = rect.x;
+					rect3.y = rect.y + rect.h / 2;
+					rect3.h = rect.h / 2;
+					rect3.w = rect.w / 2;
 
 
+					SDL_Rect rect4;
+					rect4.x = rect.x + rect.w / 2;
+					rect4.y = rect.y + rect.h / 2;
+					rect4.h = rect.h / 2;
+					rect4.w = rect.w / 2;
 
-			childs[0] = new p2QuadTreeNode(rect1);
-			childs[1] = new p2QuadTreeNode(rect2);
-			childs[2] = new p2QuadTreeNode(rect3);
-			childs[3] = new p2QuadTreeNode(rect4);
-			
-			
+					childs[0] = new p2QuadTreeNode(rect1);
+					childs[1] = new p2QuadTreeNode(rect2);
+					childs[2] = new p2QuadTreeNode(rect3);
+					childs[3] = new p2QuadTreeNode(rect4);
 
-			
-			
-					for (int i = 0; i < 4; i++)
+				}
+				for (int i = 0; i < 4; i++)
+				{
+					childs[i]->parent = this;
+
+					if (Intersects(childs[i]->rect, col->rect))
 					{
-
-						childs[i]->parent = this;
-
-						for (int j = 0; j < objects.Count(); j++)
-						{
-							SDL_Rect rect = objects[j]->rect;
-							SDL_Rect rect2 = childs[i]->rect;
-							int num = objects.Count();
-							if (j < objects.Count() && Intersects(childs[i]->rect, objects[j]->rect))
-							{
-									childs[i]->Insert(objects[j]);
-							}
-							
-						}
-
+						childs[i]->Insert(col);
 					}
-			
+
+				}
+
+			}
+
 		}
-		// En principi cada node pot enmagatzemar QUADTREE_MAX_ITEMS nodes (encara que podrien ser més)
+		
 
-		// Si es detecten més, el node s'ha de tallar en quatre
 
-		// Si es talla, a de redistribuir tots els seus colliders pels nous nodes (childs) sempre que pugui
-		// Nota: un Collider pot estar a més de un node del quadtree
-		// Nota: si un Collider intersecciona als quatre childs, deixar-lo al pare
+
+
+
+
 	}
 
 	int CollectCandidates(p2DynArray<Collider*>& nodes, const SDL_Rect& r) 
 	{
 		int possibleCollisions = 0;
-		/*
+		
 		// TODO:
 		// Omplir el array "nodes" amb tots els colliders candidats
 		// de fer intersecció amb el rectangle r
 		// retornar el número de intersección calculades en el procés
 		// Nota: és una funció recursiva
-		
+		/*
 
 		p2QuadTreeNode* tmp;
 		tmp = this;
@@ -216,7 +210,7 @@ public:
 
 	int CollectCandidates(p2DynArray<Collider*>& nodes, const SDL_Rect& r) const
 	{
-		int tests = 1;
+		int tests = 0;
 		if(root != NULL && Intersects(root->rect, r))
 			tests = root->CollectCandidates(nodes, r);
 		return tests;
